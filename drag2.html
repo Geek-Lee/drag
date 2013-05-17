@@ -11,7 +11,7 @@ window.onload=function ()
 {
   function drag(elem) {
     
-    var doc = document,
+    var  doc = document,
         
         oDiv = document.getElementById(elem),//获取DOM元素
     
@@ -23,17 +23,17 @@ window.onload=function ()
     
         var oEvent = ev||event;//事件的兼容写法；        
         
-        disX = oEvent.clientX - oDiv.offsetLeft;   
+              disX = oEvent.clientX - oDiv.offsetLeft;   
         
-        disY = oEvent.clientY - oDiv.offsetTop;// 求出 disX 和 disY
+              disY = oEvent.clientY - oDiv.offsetTop;// 求出 disX 和 disY
         
         doc.onmousemove = function (ev) {
             
             var oEvent = ev||event,
             
-                l = oEvent.clientX - disX,
+                     l = oEvent.clientX - disX,
                 
-                t = oEvent.clientY - disY;//定义 l 和 t 变量来存放元素的位置 left 和 top；
+                     t = oEvent.clientY - disY;//定义 l 和 t 变量来存放元素的位置 left 和 top；
             
             if(l<0) {
             
