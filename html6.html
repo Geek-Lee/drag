@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<style>
+#div1 {width:100px; height:100px; background:red; position: absolute;}
+</style>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+<script>
+document.drag =  function(elem) {   
+    var doc = document,        
+        oDiv = doc.getElementById(elem),//获取DOM元素    
+        disX = 0,           
+        disY = 0;// 定义 disX 和 disY 变量，用来分别存放 mousedown 事件触发是鼠标距离元素上边缘和左边缘的距离；       
+    oDiv.onmousedown = function (ev) {    
+        var oEvent = ev||event;//事件的兼容写法；                
+              disX = oEvent.clientX - oDiv.offsetLeft;          
+              disY = oEvent.clientY - oDiv.offsetTop;// 求出 disX 和 disY        
+        doc.onmousemove = function (ev) {            
+            var oEvent = ev||event,           
+                     l = oEvent.clientX - disX,                
+                     t = oEvent.clientY - disY;//定义 l 和 t 变量来存放元素的位置 left 和 top；            
+            if(l<0) {           
+                l = 0;            
+            } else if(l>doc.documentElement.clientWidth - oDiv.offsetWidth) {            
+                l = doc.documentElement.clientWidth - oDiv.offsetWidth;            
+            }            
+            if(t<0) {           
+                t = 0;            
+            } else if(t>doc.documentElement.clientHeight - oDiv.offsetHeight){            
+                t = doc.documentElement.clientHeight - oDiv.offsetHeight;           
+            }//上面连个if...else...语句是特判处理，保证了元素在 browser 的视窗内；           
+            oDiv.style.left = l + 'px';            
+            oDiv.style.top  = t + 'px';//这个是设定元素的位置，left top；       
+        };       
+        doc.onmouseup = function () {       
+            doc.onmousemove = null;            
+            doc.onmouseup   = null;            
+        };//当鼠标左键放开，拖动结束，设置 mousemove 和 mouseup 为空；       
+        return false;//返回 false ，如果元素是 <a> 可以禁止链接触发；     
+    };
+}
+</script>
+</head>
+<body>
+<div id="div1"></div>
+<script type="text/javascript">
+window.onload = function() {
+  document.drag('div1');
+}
+</script>
+</body>
+</html>
