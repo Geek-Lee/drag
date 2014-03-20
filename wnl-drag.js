@@ -1,13 +1,40 @@
-/**
- * jQuery 插件的几个关键点
- * jQuery.fn.extend() 用于扩展 jQuery 方法
- * jQuery.extend() 用于扩展 jQuery 对象和 Object 对象
- */
+;(function($, window, undefined) {
 
-;(function($) {
     $.fn.wnlDrag = function(options) {
-        var dft = {};
-        var ops = $.extend(dft, options);
+
+        var dft = {}, 
+
+            ops = $.extend(dft, options);
+
+        $(this).each(function() {
+
+            var _this = $(this), el = _this.get(0);
+
+            _this.on('mousedown', function(ev) {
+
+                var _l = ev.clientX - el.offsetLeft,
+
+                    _t = ev.clientY - el.offsetTop;
+
+                $(document).on('mousemove', function(ev) {
+
+                    el.style.left = ev.clientX - _l + 'px';
+
+                    el.style.top = ev.clientY - _t + 'px';
+
+                })
+
+                $(document).on('mouseup', function() {
+
+                    $(document).unbind('mousemove');
+
+                });
+
+            });
+
+        });
+
         return this;
     };
-})(jQuery);
+
+})(jQuery, window);
