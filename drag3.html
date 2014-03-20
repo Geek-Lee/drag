@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+#div1 {width:100px; height:100px; background:red; position: absolute;}
+</style>
+<meta charset="utf-8" />
+<title>无标题文档</title>
+<script>
+  var Class = {
+  
+		create: function() {
+    
+			return function() {
+      
+				this.initialize.apply(this, arguments);
+        
+			}
+      
+		}
+    
+	}
+  
+	var Bind = function(object, fun) {
+  
+		return function() {
+    
+			return fun.apply(object, arguments);
+      
+		}
+    
+	}
+  
+	var BindAsEventListener = function(object, fun) {
+  
+		return function(event) {
+    
+			return fun.call(object, (event || window.event));
+      
+		}
+    
+	}
+  
+	function addEventHandler(oTarget, sEventType, fnHandler) {
+  
+		if(oTarget.addEventListener) {
+    
+			oTarget.addEventListener(sEventType, fnHandler, false);
+      
+		} else if(oTarget.attachEvent) {
+    
+			oTarget.attachEvent("on"+sEventType, fnHandler);
+      
+		} else {
+    
+			oTarget["on"+sEventType] = fnHandler;
+      
+		}
+    
+	}
+  
+	function removeEventHandler(oTarget, sEventType, fnHandler) {
+  
+		if (oTarget.removeEventListener) {
+    
+			oTarget.removeEventListener(sEventType, fnHandler, false);
+      
+		} else if (oTarget.detachEvent) {
+    
+			oTarget.detachEvent("on"+sEventType, fnHandler);
+      
+		} else {
+    
+			oTarget["on"+sEventType] = null;
+      
+		}
+    
+	}
+  
+	var drag = Class.create();
+  
+	drag.prototype = {
+  
+		initialize: function(elem) {
+    
+			this.Elem = document.getElementById(elem);
+      
+			this._x = this._y = 0;
+      
+			this._fM = BindAsEventListener(this, this.Move);
+      
+			this._fS = Bind(this, this.Stop);
+      
+			this.Elem.style.position = "absolute";
+      
+			addEventHandler(this.Elem, "mousedown", BindAsEventListener(this, this.Start));
+      
+		},
+    
+		Start: function(oEvent) {
+    
+			this._x = oEvent.clientX - this.Elem.offsetLeft;
+      
+			this._y = oEvent.clientY - this.Elem.offsetTop;
+      
+			addEventHandler(document, "mousemove", this._fM);
+      
+			addEventHandler(document, "mouseup", this._fS);
+      
+		},
+    
+		Move: function(oEvent) {
+    
+			this.Elem.style.left = oEvent.clientX - this._x + "px";
+      
+			this.Elem.style.top = oEvent.clientY - this._y + "px";
+      
+		},
+    
+		Stop: function() {
+    
+			removeEventHandler(document, "mousemove", this._fM);
+      
+			removeEventHandler(document, "mouseup", this._fS);
+      
+		}
+    
+	};
+  
+</script>
+</head>
+<body>
+<div id="div1"></div>
+<script type="text/javascript">
+window.onload = function() {
+	new drag("div1");
+}
+</script>
+</body>
+</html>
